@@ -34,25 +34,10 @@ public class When_Failed_Messages_Are_Successfully_Retried : NServiceBusAcceptan
     }
 
     [Test]
-    public void Should_notify_when_successnotifications_are_enabled_and_old_retry_header_exist()
+    public void Should_notify_when_successnotifications_are_enabled_and_trigger_header_exists()
     {
         Scenario.Define<Context>()
             .WithEndpoint<TestEndpoint>(b =>  b.CustomConfig(config => config.RetrySuccessNotifications().SendRetrySuccessNotificationsTo(FakeServiceControl.NotificationsSatellite.NotificationAddress))
-            .Given(bus =>
-            {
-                bus.OutgoingHeaders.Add(ServiceControlRetryHeaders.OldRetryId, Guid.NewGuid().ToString());
-                bus.SendLocal(new MessageToBeRetried());
-            }))
-            .WithEndpoint<FakeServiceControl>()
-            .Done(c => c.MessageHandlerInvoked && c.AuditHandlerInvoked && c.NotificationHandlerInvoked)
-            .Run();
-    }
-
-    [Test]
-    public void Should_notify_when_successnotifications_are_enabled_and_uniquemessageid_header_exist()
-    {
-        Scenario.Define<Context>()
-            .WithEndpoint<TestEndpoint>(b => b.CustomConfig(config => config.RetrySuccessNotifications().SendRetrySuccessNotificationsTo(FakeServiceControl.NotificationsSatellite.NotificationAddress))
             .Given(bus =>
             {
                 bus.OutgoingHeaders.Add(ServiceControlRetryHeaders.UniqueMessageId, Guid.NewGuid().ToString());
@@ -61,6 +46,32 @@ public class When_Failed_Messages_Are_Successfully_Retried : NServiceBusAcceptan
             .WithEndpoint<FakeServiceControl>()
             .Done(c => c.MessageHandlerInvoked && c.AuditHandlerInvoked && c.NotificationHandlerInvoked)
             .Run();
+    }
+
+    [Test]
+    public void Should_not_notify_when_successnotifications_are_enabled_and_trigger_header_is_missing()
+    {
+        var context = Scenario.Define<Context>()
+            .WithEndpoint<TestEndpoint>(b => b.CustomConfig(config => config.RetrySuccessNotifications().SendRetrySuccessNotificationsTo(FakeServiceControl.NotificationsSatellite.NotificationAddress))
+                .Given(bus =>
+                {
+                    bus.SendLocal(new MessageToBeRetried());
+                }))
+            .WithEndpoint<FakeServiceControl>()
+            .Done(c =>
+            {
+                if (!c.MessageHandlerInvoked || !c.AuditHandlerInvoked)
+                {
+                    return false;
+                }
+
+                Thread.Sleep(250); //Give time for notifications to process
+
+                return true;
+            })
+            .Run();
+
+        Assert.IsFalse(context.NotificationHandlerInvoked);
     }
 
     public class Context : ScenarioContext
@@ -73,7 +84,7 @@ public class When_Failed_Messages_Are_Successfully_Retried : NServiceBusAcceptan
         public bool HasMessageBody { get; set; }
     }
 
-    public class TestEndpoint : EndpointConfigurationBuilder
+    class TestEndpoint : EndpointConfigurationBuilder
     {
 
         public TestEndpoint()
@@ -94,7 +105,7 @@ public class When_Failed_Messages_Are_Successfully_Retried : NServiceBusAcceptan
         }
     }
 
-    public class FakeServiceControl : EndpointConfigurationBuilder
+    class FakeServiceControl : EndpointConfigurationBuilder
     {
 
         public FakeServiceControl()
@@ -140,7 +151,7 @@ public class When_Failed_Messages_Are_Successfully_Retried : NServiceBusAcceptan
     }
 
     [Serializable]
-    public class MessageToBeRetried : ICommand
+    class MessageToBeRetried : ICommand
     {
         Guid value = Guid.NewGuid();
 
