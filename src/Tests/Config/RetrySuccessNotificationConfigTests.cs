@@ -1,4 +1,4 @@
-﻿namespace NServiceBus.Tests
+﻿namespace NServiceBus.Recoverability.RetrySucessNotification.ComponentTests
 {
     using System.Linq;
     using NServiceBus;
@@ -12,15 +12,15 @@
         [Test]
         public void Notification_Address_Can_Be_Set()
         {
-            var busConfiguration = new BusConfiguration();
+            var endpointConfiguration = new EndpointConfiguration("test");
 
-            var config = busConfiguration.RetrySuccessNotifications();
+            var config = endpointConfiguration.RetrySuccessNotifications();
 
             const string testAddress = "Test";
 
             config.SendRetrySuccessNotificationsTo(testAddress);
 
-            var settings = busConfiguration.GetSettings();
+            var settings = endpointConfiguration.GetSettings();
 
             string notificationAddress;
 
@@ -33,15 +33,15 @@
         [Test]
         public void Trigger_Headers_Can_Be_Added()
         {
-            var busConfiguration = new BusConfiguration();
+            var endpointConfiguration = new EndpointConfiguration("test");
 
-            var config = busConfiguration.RetrySuccessNotifications();
+            var config = endpointConfiguration.RetrySuccessNotifications();
 
             const string testHeader = "Test";
 
             config.AddRetrySuccessNotificationTriggerHeaders(testHeader);
 
-            var settings = busConfiguration.GetSettings();
+            var settings = endpointConfiguration.GetSettings();
 
             string[] triggerHeaders;
 
@@ -59,13 +59,13 @@
         [Test]
         public void Copy_Message_Body_Setting_Can_Be_Set()
         {
-            var busConfiguration = new BusConfiguration();
+            var endpointConfiguration = new EndpointConfiguration("test");
 
-            var config = busConfiguration.RetrySuccessNotifications();
+            var config = endpointConfiguration.RetrySuccessNotifications();
 
             config.CopyMessageBodyInNotification = true;
 
-            var settings = busConfiguration.GetSettings();
+            var settings = endpointConfiguration.GetSettings();
 
             bool copyBodySetting;
 
