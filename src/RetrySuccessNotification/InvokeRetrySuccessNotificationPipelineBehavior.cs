@@ -30,7 +30,7 @@ namespace NServiceBus
                 return;
             }
 
-            var processedMessage = new OutgoingMessage(context.Message.MessageId, new Dictionary<string, string>(context.Message.Headers), copyBody ? context.Message.Body : new byte[0]);
+            var processedMessage = new OutgoingMessage(context.MessageId, new Dictionary<string, string>(context.Message.Headers), copyBody ? context.Message.Body : new byte[0]);
 
             var notificationContext = this.CreateAuditContext(processedMessage, notificationAddress, context);
 
