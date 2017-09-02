@@ -17,7 +17,7 @@ namespace NServiceBus
         {
             await next().ConfigureAwait(false);
 
-            //context.Message.RevertToOriginalBodyIfNeeded();
+            context.Message.RevertToOriginalBodyIfNeededUsingReflection();
 
             var processedMessage = new OutgoingMessage(context.Message.MessageId, new Dictionary<string, string>(context.Message.Headers), context.Message.Body);
 
