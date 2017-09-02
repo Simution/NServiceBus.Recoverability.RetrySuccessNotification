@@ -1,4 +1,4 @@
-![Icon](https://raw.githubusercontent.com/Simution/NServiceBus.Recoverability.RetrySuccessNotification/develop/icons/retrysuccessnotification.png)
+![Icon](https://raw.githubusercontent.com/Simution/NServiceBus.Recoverability.RetrySuccessNotification/develop/icons/retrysuccessnotification.png | width=100)
 
 # NServiceBus.Recoverability.RetrySuccessNotification
 
