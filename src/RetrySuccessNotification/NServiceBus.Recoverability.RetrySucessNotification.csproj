@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net452</TargetFramework>
+    <AssemblyName>NServiceBus.Recoverability.RetrySuccessNotification</AssemblyName>
+    <PackageId>NServiceBus.Recoverability.RetrySuccessNotification</PackageId>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>$(SolutionDir)NServiceBus.snk</AssemblyOriginatorKeyFile>
+    <DebugType>full</DebugType>
+    <DebugSymbols>True</DebugSymbols>
+    <WarningLevel>4</WarningLevel>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <OutputPath>..\..\binaries\</OutputPath>
+    <UpdateAssemblyInfo>true</UpdateAssemblyInfo>
+  </PropertyGroup>
+  <PropertyGroup>
+    <Description>NServiceBus Retry Success Notification</Description>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>    
+  </PropertyGroup>
+  <ItemGroup>
+      <None Include="..\..\GitVersion.yml" Link="GitVersion.yml" />
+      <None Include="..\Directory.Build.targets" Link="Directory.Build.targets" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="NServiceBus" Version="[5.0.0,6.0.0)" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="System.Configuration" />
+  </ItemGroup>
+</Project>

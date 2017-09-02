@@ -1,0 +1,22 @@
+<Project>
+
+  <PropertyGroup>
+    <Authors>Bob Langley</Authors>
+    <Owners>Simution, Inc.</Owners>
+    <PackageLicenseUrl>https://raw.githubusercontent.com/Simution/NServiceBus.Recoverability.RetrySuccessNotification/develop/LICENSE</PackageLicenseUrl>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <Copyright>Copyright 2010-$([System.DateTime]::UtcNow.ToString(yyyy)) Simution. All rights reserved</Copyright>
+    <PackageTags>nservicebus servicecontrol</PackageTags>
+    <PackageIconUrl>https://raw.githubusercontent.com/Simution/NServiceBus.Recoverability.RetrySuccessNotification/develop/icons/retrysuccessnotification.png</PackageIconUrl>
+    <PackageProjectUrl>https://github.com/simution/$(PackageId)</PackageProjectUrl>
+    <PackageOutputPath>..\..\nugets</PackageOutputPath>
+    <TargetsForTfmSpecificContentInPackage>$(TargetsForTfmSpecificContentInPackage);IncludePDBsInPackage</TargetsForTfmSpecificContentInPackage>
+  </PropertyGroup>
+
+  <Target Name="IncludePDBsInPackage" Condition="'$(IncludeBuildOutput)' != 'false'">
+    <ItemGroup>
+      <TfmSpecificPackageFile Include="$(OutputPath)\$(AssemblyName).pdb" PackagePath="lib/$(TargetFramework)" />
+    </ItemGroup>
+  </Target>
+
+</Project>
