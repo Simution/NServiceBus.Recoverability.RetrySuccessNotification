@@ -1,6 +1,7 @@
 ﻿namespace NServiceBus.AcceptanceTests
 {
     using System.Linq;
+    using System.Threading;
     using AcceptanceTesting.Customization;
     using NUnit.Framework;
 
@@ -16,6 +17,7 @@
         {
             Conventions.EndpointNamingConvention = t =>
             {
+                // ReSharper disable once PossibleNullReferenceException
                 var classAndEndpoint = t.FullName.Split('.').Last();
 
                 var testName = classAndEndpoint.Split('+').First();
@@ -24,15 +26,12 @@
 
                 var endpointBuilder = classAndEndpoint.Split('+').Last();
 
-
-                testName = System.Threading.Thread.CurrentThread.CurrentCulture.TextInfo.ToTitleCase(testName);
+                testName = Thread.CurrentThread.CurrentCulture.TextInfo.ToTitleCase(testName);
 
                 testName = testName.Replace("_", "");
 
                 return testName + "." + endpointBuilder;
             };
-
-            Conventions.DefaultRunDescriptor = () => ScenarioDescriptors.Transports.Default;
         }
     }
 }

@@ -1,18 +1,16 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net452</TargetFramework>
+    <TargetFramework>net47</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="NServiceBus" Version="5.2.23" />
-    <PackageReference Include="NServiceBus.AcceptanceTesting" Version="5.2.23" />
-    <PackageReference Include="NUnit" Version="3.8.1" />
+    <PackageReference Include="NServiceBus" Version="6.*" />
+    <PackageReference Include="NServiceBus.AcceptanceTesting" Version="6.*" />
+    <PackageReference Include="NUnit" Version="3.*" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\RetrySuccessNotification\NServiceBus.Recoverability.RetrySucessNotification.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="Microsoft.CSharp">
-      <HintPath>..\..\..\..\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5\Microsoft.CSharp.dll</HintPath>
-    </Reference>
+    <Reference Include="Microsoft.CSharp"/>
   </ItemGroup>
 </Project>
