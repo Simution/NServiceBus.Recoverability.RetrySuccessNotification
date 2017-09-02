@@ -8,9 +8,9 @@
     using Hosting.Helpers;
     using Logging;
     using NServiceBus;
-    using NServiceBus.AcceptanceTesting;
-    using NServiceBus.Config.ConfigurationSource;
-    using NServiceBus.Configuration.AdvanceExtensibility;
+    using AcceptanceTesting;
+    using Config.ConfigurationSource;
+    using Configuration.AdvanceExtensibility;
 
     public class DefaultServer : IEndpointSetupTemplate
     {
@@ -89,7 +89,9 @@
             yield return rootType;
 
             if (typeof(IEndpointConfigurationFactory).IsAssignableFrom(rootType) && rootType != builderType)
+            {
                 yield break;
+            }
 
             foreach (var nestedType in rootType.GetNestedTypes(BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic).SelectMany(t => GetNestedTypeRecursive(t, builderType)))
             {
