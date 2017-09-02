@@ -134,8 +134,8 @@ public class When_Failed_Messages_Are_Successfully_Retried : NServiceBusAcceptan
             {
             }                
 
-            public Address InputAddress => Address.Parse("Notifications");
-            public bool Disabled { get; }
+            public Address InputAddress => Address.Parse(NotificationAddress);
+            public bool Disabled => false;
         }
 
         public class MessageToBeRetriedHandler : IHandleMessages<MessageToBeRetried>
