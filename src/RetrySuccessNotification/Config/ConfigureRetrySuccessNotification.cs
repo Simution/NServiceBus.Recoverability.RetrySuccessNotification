@@ -10,7 +10,7 @@
         /// <summary>
         /// Access settings to configure Retry Success Notifications
         /// </summary>
-        public static RetrySuccessNotificationConfig RetrySuccessNotifications(this BusConfiguration config)
+        public static RetrySuccessNotificationConfig RetrySuccessNotifications(this EndpointConfiguration config)
         {
             return new RetrySuccessNotificationConfig(config.GetSettings());
         }

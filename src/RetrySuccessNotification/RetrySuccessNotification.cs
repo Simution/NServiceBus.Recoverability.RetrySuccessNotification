@@ -1,6 +1,8 @@
 ﻿namespace NServiceBus.Features
 {
+    using Pipeline;
     using Recoverability;
+    using Transport;
 
     /// <summary>
     /// Provides the retry success notification feature
@@ -25,25 +27,42 @@
                 settings.Set(TriggerHeadersKey, DefaultTriggerHeaders);
                 settings.Set(CopyBody, false);
             });
-            Prerequisite(config => AuditConfigHelper.GetConfiguredAuditQueue(config).ToString() != config.Settings.GetOrDefault<string>(AddressKey), "Retry Success Notifications cannot be sent to the same queue as Audits");
+            Prerequisite(config =>
+            {
+                if (!config.Settings.IsFeatureActive(typeof(Audit)))
+                {
+                    return true;
+                }
+                string auditAddress;
+                if (!config.Settings.TryGetAuditQueueAddress(out auditAddress))
+                {
+                    return true;
+                }
+                return auditAddress != config.Settings.GetOrDefault<string>(AddressKey);
+            }, "Retry Success Notifications cannot be sent to the same queue as Audits");
             Prerequisite(config => !string.IsNullOrWhiteSpace(config.Settings.GetOrDefault<string>(AddressKey)), "No configured retry success notification address was configured");
         }
 
         /// <inheritdoc />
         protected override void Setup(FeatureConfigurationContext context)
         {
-            context.Pipeline.Register<RetrySuccessNotificationBehavior.Registration>();
-
             var endpointName = context.Settings.EndpointName();
-            var notificationAddress = Address.Parse(context.Settings.Get<string>(AddressKey));
+            var notificationAddress = context.Settings.Get<string>(AddressKey);
             var triggerHeaders = context.Settings.Get<string[]>(TriggerHeadersKey);
             var copyBody = context.Settings.Get<bool>(CopyBody);
 
-            context.Container.ConfigureComponent<RetrySuccessNotificationBehavior>(DependencyLifecycle.InstancePerCall)
-                .ConfigureProperty(b => b.NotificationAddress, notificationAddress)
-                .ConfigureProperty(b => b.ProcessingEndpointName, endpointName)
-                .ConfigureProperty(b => b.TriggerHeaders, triggerHeaders)
-                .ConfigureProperty(b => b.CopyBody, copyBody);
+            context.Settings.Get<QueueBindings>().BindSending(notificationAddress);
+
+            if (!context.Settings.IsFeatureActive(typeof(Audit)))
+            {
+                context.Pipeline.Register(new RetrySuccessNotificationDispatchConnector(endpointName), "Dispatches recovery success notifications to the transport");
+                context.Pipeline.Register(new InvokeRetrySuccessNotificationPipelineBehavior(notificationAddress, triggerHeaders, copyBody), "Execute the retry success notification pipeline.");
+                return;
+            }
+
+            string auditAddress;
+            context.Settings.TryGetAuditQueueAddress(out auditAddress);
+            context.Pipeline.Replace("AuditProcessedMessage", new InvokeAuditAndRetrySucessNotificationPipelineBehavior(notificationAddress, triggerHeaders, copyBody, auditAddress), "Execute the audit and retry success notification pipelines.");            
         }
     }
 }
