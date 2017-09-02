@@ -14,5 +14,9 @@
         /// Header used by service control to uniquely identify the message
         /// </summary>
         public const string UniqueMessageId = "ServiceControl.Retry.UniqueMessageId";
+
+        internal ServiceControlRetryHeaders()
+        {
+        }
     }
 }
