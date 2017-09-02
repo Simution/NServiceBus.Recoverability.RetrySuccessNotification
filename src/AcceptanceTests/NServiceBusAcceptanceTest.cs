@@ -32,7 +32,7 @@
                 return testName + "." + endpointBuilder;
             };
 
-            Conventions.DefaultRunDescriptor = () => ScenarioDescriptors.Transports.Default;
+            Conventions.DefaultRunDescriptor = () => ScenarioDescriptors.Transports.Msmq;
         }
     }
 }
