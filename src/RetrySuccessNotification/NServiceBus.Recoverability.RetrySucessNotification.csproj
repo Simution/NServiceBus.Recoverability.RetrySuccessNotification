@@ -23,7 +23,7 @@
       <None Include="..\..\GitVersion.yml" Link="GitVersion.yml" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="NServiceBus" Version="5.2.23" />
+    <PackageReference Include="NServiceBus" Version="[5.0.0,6.0.0)" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System.Configuration" />

@@ -43,7 +43,7 @@
             public Registration()
                 : base("RetrySuccessNotification", typeof(RetrySuccessNotificationBehavior), "Dispatches retry success notifications to the transport")
             {
-                InsertBefore(WellKnownStep.ProcessingStatistics);
+                InsertBefore("ProcessingStatistics");
             }
         }
     }
