@@ -2,8 +2,8 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net452</TargetFramework>
-    <AssemblyName>NServiceBus.Recoverability.RetrySuccessNotifications</AssemblyName>
-    <PackageId>NServiceBus.Recoverability.RetrySuccessNotifications</PackageId>
+    <AssemblyName>NServiceBus.Recoverability.RetrySuccessNotification</AssemblyName>
+    <PackageId>NServiceBus.Recoverability.RetrySuccessNotification</PackageId>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>$(SolutionDir)NServiceBus.snk</AssemblyOriginatorKeyFile>
@@ -16,7 +16,7 @@
     <UpdateAssemblyInfo>true</UpdateAssemblyInfo>
   </PropertyGroup>
   <PropertyGroup>
-    <Description>NServiceBus Retry Success Notifications</Description>
+    <Description>NServiceBus Retry Success Notification</Description>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>    
   </PropertyGroup>
   <ItemGroup>
