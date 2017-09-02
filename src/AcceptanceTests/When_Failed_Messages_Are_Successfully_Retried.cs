@@ -24,7 +24,7 @@ public class When_Failed_Messages_Are_Successfully_Retried : NServiceBusAcceptan
                     return false;
                 }
 
-                Thread.Sleep(250); //Give time for notifications to process
+                Thread.Sleep(1000); //Give time for notifications to process
 
                 return true;
             })
@@ -45,7 +45,7 @@ public class When_Failed_Messages_Are_Successfully_Retried : NServiceBusAcceptan
             }))
             .WithEndpoint<FakeServiceControl>()
             .Done(c => c.MessageHandlerInvoked && c.AuditHandlerInvoked && c.NotificationHandlerInvoked)
-            .Run();
+            .Run(TimeSpan.FromMinutes(3));
     }
 
     [Test]
@@ -65,11 +65,11 @@ public class When_Failed_Messages_Are_Successfully_Retried : NServiceBusAcceptan
                     return false;
                 }
 
-                Thread.Sleep(250); //Give time for notifications to process
+                Thread.Sleep(1000); //Give time for notifications to process
 
                 return true;
             })
-            .Run();
+            .Run(TimeSpan.FromMinutes(3));
 
         Assert.IsFalse(context.NotificationHandlerInvoked);
     }
