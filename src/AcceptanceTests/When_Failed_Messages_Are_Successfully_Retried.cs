@@ -10,7 +10,7 @@ using NServiceBus.ObjectBuilder;
 using NServiceBus.Recoverability;
 using NServiceBus.Transport;
 using NUnit.Framework;
-using Conventions = NServiceBus.AcceptanceTesting.Customization.Conventions;
+using NServiceBus.AcceptanceTesting.Customization;
 
 public class When_Failed_Messages_Are_Successfully_Retried : NServiceBusAcceptanceTest
 {
@@ -18,7 +18,7 @@ public class When_Failed_Messages_Are_Successfully_Retried : NServiceBusAcceptan
     public async Task Should_not_notify_when_successnotifications_are_disabled()
     {
         var context = await Scenario.Define<Context>()
-            .WithEndpoint<TestEndpoint>(b => b.CustomConfig(config => config.AuditProcessedMessagesTo(FakeServiceControl.Address)).When(s => s.SendLocal(new MessageToBeRetried
+            .WithEndpoint<TestEndpoint>(b => b.When(s => s.SendLocal(new MessageToBeRetried
             {
                 Value = Guid.NewGuid()
             })))
@@ -44,11 +44,7 @@ public class When_Failed_Messages_Are_Successfully_Retried : NServiceBusAcceptan
     public async Task Should_notify_when_successnotifications_are_enabled_and_trigger_header_exists()
     {
         var context = await Scenario.Define<Context>()
-            .WithEndpoint<TestEndpoint>(b => b.CustomConfig(config =>
-                {
-                    config.AuditProcessedMessagesTo(FakeServiceControl.Address);
-                    config.RetrySuccessNotifications().SendRetrySuccessNotificationsTo(FakeServiceControl.NotificationsSatellite.NotificationAddress);
-                })
+            .WithEndpoint<TestEndpoint>(b => b.CustomConfig(config => config.RetrySuccessNotifications().SendRetrySuccessNotificationsTo(FakeServiceControl.NotificationsSatellite.NotificationAddress))
             .When(s =>
             {
                 var options = new SendOptions();
@@ -67,11 +63,7 @@ public class When_Failed_Messages_Are_Successfully_Retried : NServiceBusAcceptan
     public async Task Should_not_notify_when_successnotifications_are_enabled_and_trigger_header_is_missing()
     {
         var context = await Scenario.Define<Context>()
-            .WithEndpoint<TestEndpoint>(b => b.CustomConfig(config =>
-                {
-                    config.AuditProcessedMessagesTo(FakeServiceControl.Address);
-                    config.RetrySuccessNotifications().SendRetrySuccessNotificationsTo(FakeServiceControl.NotificationsSatellite.NotificationAddress);
-                })
+            .WithEndpoint<TestEndpoint>(b => b.CustomConfig(config => config.RetrySuccessNotifications().SendRetrySuccessNotificationsTo(FakeServiceControl.NotificationsSatellite.NotificationAddress))
                 .When(s => s.SendLocal(new MessageToBeRetried())))
             .WithEndpoint<FakeServiceControl>()
             .Done(c =>
@@ -105,7 +97,8 @@ public class When_Failed_Messages_Are_Successfully_Retried : NServiceBusAcceptan
 
         public TestEndpoint()
         {
-            EndpointSetup<DefaultServer>();
+            EndpointSetup<DefaultServer>(c => c
+                .AuditProcessedMessagesTo<FakeServiceControl>());
         }
 
         public class MessageToBeRetriedHandler : IHandleMessages<MessageToBeRetried>
@@ -123,8 +116,6 @@ public class When_Failed_Messages_Are_Successfully_Retried : NServiceBusAcceptan
 
     class FakeServiceControl : EndpointConfigurationBuilder
     {
-        public static string Address = Conventions.EndpointNamingConvention(typeof(FakeServiceControl));
-
         public FakeServiceControl()
         {
             EndpointSetup<DefaultServer>();
