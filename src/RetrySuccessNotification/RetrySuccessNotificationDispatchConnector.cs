@@ -16,7 +16,7 @@ namespace NServiceBus
         {
             context.Message.Headers.Add(Headers.ProcessingEndpoint, endpointName);
 
-            var dispatchContext = ConnectorContextExtensions.CreateRoutingContext(this, context.Message, new UnicastRoutingStrategy(context.AuditAddress), context);
+            var dispatchContext = this.CreateRoutingContext(context.Message, new UnicastRoutingStrategy(context.AuditAddress), context);
 
             return stage(dispatchContext);
         }

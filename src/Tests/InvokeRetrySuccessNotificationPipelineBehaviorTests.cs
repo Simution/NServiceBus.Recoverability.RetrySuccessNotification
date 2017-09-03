@@ -72,8 +72,7 @@
             Assert.IsTrue(auditContext.Message.Headers.ContainsKey(header.Key), "Header not found");
             Assert.AreEqual(header.Value, auditContext.Message.Headers[header.Key], "Header value does not match");
             Assert.AreNotEqual(FakeMessageBody, auditContext.Message.Body, "Body was copied when it should not have been");
-            string extensionsVal;
-            Assert.IsTrue(auditContext.Extensions.TryGet(FakeIncomingPhysicalMessageContext.TestKey, out extensionsVal), "AuditContext was not created with incoming physical context");
+            Assert.IsTrue(auditContext.Extensions.ContainsKey<string>(FakeIncomingPhysicalMessageContext.TestKey), "AuditContext was not created with incoming physical context");
         }
 
         [Test]

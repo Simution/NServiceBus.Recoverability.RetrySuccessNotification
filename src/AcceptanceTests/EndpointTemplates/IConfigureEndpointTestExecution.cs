@@ -1,5 +1,6 @@
 ﻿namespace NServiceBus.AcceptanceTesting.Support
 {
+    using System.Diagnostics.CodeAnalysis;
     using System.Threading.Tasks;
 
     /// <summary>
@@ -18,6 +19,7 @@
         /// Persistence must call configuration.UsePersistence&lt;T&gt;(). </param>
         /// <param name="publisherMetadata">Metadata about publishers and the events they own.</param>
         /// <returns>An async Task.</returns>
+        [SuppressMessage("ReSharper", "UnusedParameter.Global")]
         Task Configure(string endpointName, EndpointConfiguration configuration, RunSettings settings, PublisherMetadata publisherMetadata);
 
         /// <summary>

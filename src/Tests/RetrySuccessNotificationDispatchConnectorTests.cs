@@ -56,8 +56,7 @@
 
             Assert.AreEqual(auditContext.AuditAddress, addressTag.ToString(), "Address tag is incorrect");
 
-            string extensionsVal;
-            Assert.IsTrue(routingContext.Extensions.TryGet("TestKey", out extensionsVal), "RoutingContext was not created with incoming audit context");
+            Assert.IsTrue(routingContext.Extensions.ContainsKey<string>("TestKey"), "RoutingContext was not created with incoming audit context");
         }
 
         class FakeAuditContext : IAuditContext

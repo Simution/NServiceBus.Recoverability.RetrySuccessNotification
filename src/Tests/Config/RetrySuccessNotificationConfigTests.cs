@@ -22,9 +22,7 @@
 
             var settings = endpointConfiguration.GetSettings();
 
-            string notificationAddress;
-
-            var settingRetrieved = settings.TryGet(RetrySuccessNotification.AddressKey, out notificationAddress);
+            var settingRetrieved = settings.TryGet(RetrySuccessNotification.AddressKey, out string notificationAddress);
 
             Assert.IsTrue(settingRetrieved, "Setting was not set");
             Assert.AreEqual(testAddress, notificationAddress, "Incorrect Notification Address value");
@@ -43,9 +41,7 @@
 
             var settings = endpointConfiguration.GetSettings();
 
-            string[] triggerHeaders;
-
-            var settingRetrieved = settings.TryGet(RetrySuccessNotification.TriggerHeadersKey, out triggerHeaders);
+            var settingRetrieved = settings.TryGet(RetrySuccessNotification.TriggerHeadersKey, out string[] triggerHeaders);
 
             var expectedHeaders = RetrySuccessNotification.DefaultTriggerHeaders.Union(new[]
             {
@@ -67,9 +63,7 @@
 
             var settings = endpointConfiguration.GetSettings();
 
-            bool copyBodySetting;
-
-            var settingRetrieved = settings.TryGet(RetrySuccessNotification.CopyBody, out copyBodySetting);
+            var settingRetrieved = settings.TryGet(RetrySuccessNotification.CopyBody, out bool copyBodySetting);
 
             Assert.IsTrue(settingRetrieved, "Setting was not set");
             Assert.IsTrue(copyBodySetting, "Incorrect Copy Body Setting value");

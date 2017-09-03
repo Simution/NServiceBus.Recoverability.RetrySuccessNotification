@@ -13,7 +13,7 @@
     class FakeIncomingPhysicalMessageContext : IIncomingPhysicalMessageContext
     {
         public const string TestKey = "Key";
-        public const string TestValue = "Value";
+        const string TestValue = "Value";
 
         public ContextBag Extensions { get; }
         public IBuilder Builder { get; }

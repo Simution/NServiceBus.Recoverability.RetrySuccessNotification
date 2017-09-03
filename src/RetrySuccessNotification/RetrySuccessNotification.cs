@@ -1,11 +1,11 @@
 ﻿namespace NServiceBus.Features
 {
-    using Pipeline;
     using Recoverability;
     using Transport;
 
+    /// <inheritdoc />
     /// <summary>
-    /// Provides the retry success notification feature
+    /// Provides the retry success notification feature    
     /// </summary>
     public class RetrySuccessNotification : Feature
     {
@@ -33,8 +33,7 @@
                 {
                     return true;
                 }
-                string auditAddress;
-                if (!config.Settings.TryGetAuditQueueAddress(out auditAddress))
+                if (!config.Settings.TryGetAuditQueueAddress(out var auditAddress))
                 {
                     return true;
                 }
@@ -60,8 +59,7 @@
                 return;
             }
 
-            string auditAddress;
-            context.Settings.TryGetAuditQueueAddress(out auditAddress);
+            context.Settings.TryGetAuditQueueAddress(out var auditAddress);
             context.Pipeline.Replace("AuditProcessedMessage", new InvokeAuditAndRetrySucessNotificationPipelineBehavior(notificationAddress, triggerHeaders, copyBody, auditAddress), "Execute the audit and retry success notification pipelines.");            
         }
     }

@@ -54,8 +54,7 @@ namespace NServiceBus.Recoverability.RetrySucessNotification.ComponentTests
             Assert.IsTrue(auditContext.Message.Headers.ContainsKey(header.Key), "Header not found");
             Assert.AreEqual(header.Value, auditContext.Message.Headers[header.Key], "Header value does not match");
             Assert.AreEqual(FakeMessageBody, auditContext.Message.Body, "Body was not copied when it should have been.");
-            string extensionsVal;
-            Assert.IsTrue(auditContext.Extensions.TryGet(FakeIncomingPhysicalMessageContext.TestKey, out extensionsVal), "AuditContext was not created with incoming physical context");
+            Assert.IsTrue(auditContext.Extensions.ContainsKey<string>(FakeIncomingPhysicalMessageContext.TestKey), "AuditContext was not created with incoming physical context");
         }
 
         [Test]
@@ -99,8 +98,7 @@ namespace NServiceBus.Recoverability.RetrySucessNotification.ComponentTests
             Assert.IsTrue(auditContext.Message.Headers.ContainsKey(ServiceControlRetryHeaders.UniqueMessageId), "Audit header not found");
             Assert.AreEqual(testHeaderVal, auditContext.Message.Headers[ServiceControlRetryHeaders.UniqueMessageId], "Audit header value does not match");
             Assert.AreEqual(FakeMessageBody, auditContext.Message.Body, "Audit body was not copied when it should have been.");
-            string extensionsVal;
-            Assert.IsTrue(auditContext.Extensions.TryGet(FakeIncomingPhysicalMessageContext.TestKey, out extensionsVal), "Audit AuditContext was not created with incoming physical context");
+            Assert.IsTrue(auditContext.Extensions.ContainsKey<string>(FakeIncomingPhysicalMessageContext.TestKey), "Audit AuditContext was not created with incoming physical context");
 
             auditContext = auditContexts.Last();
 
@@ -110,8 +108,7 @@ namespace NServiceBus.Recoverability.RetrySucessNotification.ComponentTests
             Assert.IsTrue(auditContext.Message.Headers.ContainsKey(ServiceControlRetryHeaders.UniqueMessageId), "Notification header not found");
             Assert.AreEqual(testHeaderVal, auditContext.Message.Headers[ServiceControlRetryHeaders.UniqueMessageId], "Noticication header value does not match");
             Assert.AreNotEqual(FakeMessageBody, auditContext.Message.Body, "Notification body was copied when it should not have been.");
-
-            Assert.IsTrue(auditContext.Extensions.TryGet(FakeIncomingPhysicalMessageContext.TestKey, out extensionsVal), "AuditContext was not created with incoming physical context");
+            Assert.IsTrue(auditContext.Extensions.ContainsKey<string>(FakeIncomingPhysicalMessageContext.TestKey), "Notification AuditContext was not created with incoming physical context");
         }
     }
 }

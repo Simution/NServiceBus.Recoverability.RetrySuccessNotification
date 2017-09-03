@@ -14,9 +14,11 @@
 
         bool SupportsOutbox { get; }
 
-        IConfigureEndpointTestExecution CreateTransportConfiguration();
+        // ReSharper disable UnusedMemberInSuper.Global
+        IConfigureEndpointTestExecution CreateTransportConfiguration();        
 
         IConfigureEndpointTestExecution CreatePersistenceConfiguration();
+        // ReSharper restore UnusedMemberInSuper.Global
     }
 
     // ReSharper disable once PartialTypeWithSinglePart

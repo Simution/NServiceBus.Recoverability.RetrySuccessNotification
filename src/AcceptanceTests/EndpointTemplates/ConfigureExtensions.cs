@@ -31,6 +31,7 @@
             while (type != typeof(object))
             {
                 r.RegisterSingleton(type, runDescriptor.ScenarioContext);
+                // ReSharper disable once PossibleNullReferenceException
                 type = type.BaseType;
             }
         }
