@@ -3,7 +3,7 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 [assembly: AssemblyTitle("NServiceBus.Recoverability.RetrySuccessNotification")]
-[assembly: AssemblyCopyright("Copyright Bob Langley. All rights reserved")]
+[assembly: AssemblyCopyright("Copyright Simution, Inc. All rights reserved")]
 [assembly: AssemblyProduct("NServiceBus.Recoverability.RetrySucessNotification")]
 [assembly: ComVisible(false)]
 
