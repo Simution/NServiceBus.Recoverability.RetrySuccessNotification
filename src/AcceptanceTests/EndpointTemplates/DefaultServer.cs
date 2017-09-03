@@ -2,20 +2,15 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Linq;
-    using System.Reflection;
+    using System.Threading.Tasks;
+    using AcceptanceTesting.Customization;
     using AcceptanceTesting.Support;
-    using Hosting.Helpers;
-    using Logging;
-    using NServiceBus;
-    using AcceptanceTesting;
-    using Config.ConfigurationSource;
     using Configuration.AdvanceExtensibility;
+    using Features;
+    using Config.ConfigurationSource;
 
     public class DefaultServer : IEndpointSetupTemplate
     {
-        readonly List<Type> typesToInclude;
-
         public DefaultServer()
         {
             typesToInclude = new List<Type>();
@@ -26,78 +21,39 @@
             this.typesToInclude = typesToInclude;
         }
 
-        public BusConfiguration GetConfiguration(RunDescriptor runDescriptor, EndpointConfiguration endpointConfiguration, IConfigurationSource configSource, Action<BusConfiguration> configurationBuilderCustomization)
+#pragma warning disable CS0618
+        public async Task<EndpointConfiguration> GetConfiguration(RunDescriptor runDescriptor, EndpointCustomizationConfiguration endpointConfiguration, IConfigurationSource configSource, Action<EndpointConfiguration> configurationBuilderCustomization)
+#pragma warning restore CS0618
         {
-            var settings = runDescriptor.Settings;
-
-            LogManager.UseFactory(new ContextAppender(runDescriptor.ScenarioContext, endpointConfiguration.EndpointName));
-
-            var types = GetTypesScopedByTestClass(endpointConfiguration);
+            var types = endpointConfiguration.GetTypesScopedByTestClass();
 
             typesToInclude.AddRange(types);
 
-            var builder = new BusConfiguration();
+            var configuration = new EndpointConfiguration(endpointConfiguration.EndpointName);
 
-            builder.EndpointName(endpointConfiguration.EndpointName);
-            builder.TypesToScan(typesToInclude);
-            builder.CustomConfigurationSource(configSource);
-            builder.EnableInstallers();
-            builder.DefineTransport(settings, endpointConfiguration.BuilderType);
-            builder.DefineTransactions(settings);
-            builder.DefineBuilder(settings);
-            builder.RegisterComponents(r =>
-            {
-                r.RegisterSingleton(runDescriptor.ScenarioContext.GetType(), runDescriptor.ScenarioContext);
-                r.RegisterSingleton(typeof(ScenarioContext), runDescriptor.ScenarioContext);
-            });
+            configuration.TypesToIncludeInScan(typesToInclude);
+            configuration.CustomConfigurationSource(configSource);
+            configuration.EnableInstallers();
 
-       
-            var serializer = settings.GetOrNull("Serializer");
+            configuration.DisableFeature<TimeoutManager>();
 
-            if (serializer != null)
-            {
-                builder.UseSerialization(Type.GetType(serializer));
-            }
-            builder.DefinePersistence(settings);
+            var recoverability = configuration.Recoverability();
+            recoverability.Delayed(delayed => delayed.NumberOfRetries(0));
+            recoverability.Immediate(immediate => immediate.NumberOfRetries(0));
+            configuration.SendFailedMessagesTo("error");
 
-            builder.GetSettings().SetDefault("ScaleOut.UseSingleBrokerQueue", true);
-            configurationBuilderCustomization(builder);
+            await configuration.DefineTransport(runDescriptor, endpointConfiguration).ConfigureAwait(false);
 
+            configuration.RegisterComponentsAndInheritanceHierarchy(runDescriptor);
 
-            return builder;
+            await configuration.DefinePersistence(runDescriptor, endpointConfiguration).ConfigureAwait(false);
+
+            configuration.GetSettings().SetDefault("ScaleOut.UseSingleBrokerQueue", true);
+            configurationBuilderCustomization(configuration);
+
+            return configuration;
         }
 
-        static IEnumerable<Type> GetTypesScopedByTestClass(EndpointConfiguration endpointConfiguration)
-        {
-            var assemblies = new AssemblyScanner().GetScannableAssemblies();
-
-            var types = assemblies.Assemblies
-                //exclude all test types by default
-                                  .Where(a => a != Assembly.GetExecutingAssembly())
-                                  .SelectMany(a => a.GetTypes());
-
-
-            types = types.Union(GetNestedTypeRecursive(endpointConfiguration.BuilderType.DeclaringType, endpointConfiguration.BuilderType));
-
-            types = types.Union(endpointConfiguration.TypesToInclude);
-
-            return types.Where(t => !endpointConfiguration.TypesToExclude.Contains(t)).ToList();
-        }
-
-        static IEnumerable<Type> GetNestedTypeRecursive(Type rootType, Type builderType)
-        {
-            yield return rootType;
-
-            if (typeof(IEndpointConfigurationFactory).IsAssignableFrom(rootType) && rootType != builderType)
-            {
-                yield break;
-            }
-
-            foreach (var nestedType in rootType.GetNestedTypes(BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic).SelectMany(t => GetNestedTypeRecursive(t, builderType)))
-            {
-                yield return nestedType;
-            }
-        }
-
+        List<Type> typesToInclude;
     }
 }
