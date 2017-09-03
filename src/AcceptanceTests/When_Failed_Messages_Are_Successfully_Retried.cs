@@ -18,7 +18,10 @@ public class When_Failed_Messages_Are_Successfully_Retried : NServiceBusAcceptan
     public async Task Should_not_notify_when_successnotifications_are_disabled()
     {
         var context = await Scenario.Define<Context>()
-            .WithEndpoint<TestEndpoint>(b => b.CustomConfig(config => config.AuditProcessedMessagesTo(FakeServiceControl.Address)).When(s => s.SendLocal(new MessageToBeRetried())))
+            .WithEndpoint<TestEndpoint>(b => b.CustomConfig(config => config.AuditProcessedMessagesTo(FakeServiceControl.Address)).When(s => s.SendLocal(new MessageToBeRetried
+            {
+                Value = Guid.NewGuid()
+            })))
             .WithEndpoint<FakeServiceControl>()
             .Done(c =>
             {
@@ -34,12 +37,13 @@ public class When_Failed_Messages_Are_Successfully_Retried : NServiceBusAcceptan
             .Run();
 
         Assert.IsFalse(context.NotificationHandlerInvoked);
+        Assert.AreEqual(context.ExpectedValue, context.AuditedValue, "Value mismatch");
     }
 
     [Test]
     public async Task Should_notify_when_successnotifications_are_enabled_and_trigger_header_exists()
     {
-        await Scenario.Define<Context>()
+        var context = await Scenario.Define<Context>()
             .WithEndpoint<TestEndpoint>(b => b.CustomConfig(config =>
                 {
                     config.AuditProcessedMessagesTo(FakeServiceControl.Address);
@@ -55,6 +59,8 @@ public class When_Failed_Messages_Are_Successfully_Retried : NServiceBusAcceptan
             .WithEndpoint<FakeServiceControl>()
             .Done(c => c.MessageHandlerInvoked && c.AuditHandlerInvoked && c.NotificationHandlerInvoked)
             .Run(TimeSpan.FromMinutes(3));
+
+        Assert.IsFalse(context.HasMessageBody, "Message body is not empty");
     }
 
     [Test]
@@ -166,8 +172,6 @@ public class When_Failed_Messages_Are_Successfully_Retried : NServiceBusAcceptan
     [Serializable]
     class MessageToBeRetried : ICommand
     {
-        Guid value = Guid.NewGuid();
-
-        public Guid Value => value;
+        public Guid Value { get; set; }
     }
 }
