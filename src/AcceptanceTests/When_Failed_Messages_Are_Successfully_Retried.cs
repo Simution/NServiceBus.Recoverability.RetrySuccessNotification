@@ -38,6 +38,7 @@ public class When_Failed_Messages_Are_Successfully_Retried : NServiceBusAcceptan
 
         Assert.IsFalse(context.NotificationHandlerInvoked);
         Assert.AreEqual(context.ExpectedValue, context.AuditedValue, "Value mismatch");
+        Assert.IsTrue(context.HasProcessingEndpointHeader, "Processing Endpoint header missing");
     }
 
     [Test]
@@ -57,6 +58,7 @@ public class When_Failed_Messages_Are_Successfully_Retried : NServiceBusAcceptan
             .Run();
 
         Assert.IsFalse(context.HasMessageBody, "Message body is not empty");
+        Assert.IsTrue(context.HasProcessingEndpointHeader, "Processing Endpoint header missing");
     }
 
     [Test]
@@ -80,6 +82,7 @@ public class When_Failed_Messages_Are_Successfully_Retried : NServiceBusAcceptan
             .Run(TimeSpan.FromMinutes(3));
 
         Assert.IsFalse(context.NotificationHandlerInvoked);
+        Assert.IsTrue(context.HasProcessingEndpointHeader, "Processing Endpoint header missing");
     }
 
     class Context : ScenarioContext
@@ -89,6 +92,7 @@ public class When_Failed_Messages_Are_Successfully_Retried : NServiceBusAcceptan
         public bool NotificationHandlerInvoked { get; set; }
         public Guid ExpectedValue { get; set; }
         public Guid AuditedValue { get; set; }
+        public bool HasProcessingEndpointHeader { get; set; }
         public bool HasMessageBody { get; set; }
     }
 
@@ -155,6 +159,7 @@ public class When_Failed_Messages_Are_Successfully_Retried : NServiceBusAcceptan
             {
                 MyContext.AuditHandlerInvoked = true;
                 MyContext.AuditedValue = message.Value;
+                MyContext.HasProcessingEndpointHeader = context.MessageHeaders.ContainsKey(Headers.ProcessingEndpoint);
                 return Task.CompletedTask;
             }
         }

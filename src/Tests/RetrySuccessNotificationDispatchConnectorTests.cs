@@ -15,9 +15,7 @@
     {
         public async Task Should_Call_Stage_With_HeadersAsync()
         {
-            const string endpointName = "test";
-
-            var connector = new RetrySuccessNotificationDispatchConnector(endpointName);
+            var connector = new RetrySuccessNotificationDispatchConnector();
 
             IRoutingContext routingContext = null;
 
@@ -46,7 +44,6 @@
             Assert.IsTrue(routingContext.Message.Headers.ContainsKey(ServiceControlRetryHeaders.UniqueMessageId), "Header was not copied");
             Assert.AreEqual(outGoingMessage.Headers[ServiceControlRetryHeaders.UniqueMessageId], routingContext.Message.Headers[ServiceControlRetryHeaders.UniqueMessageId], "Header value was not copied");
             Assert.IsTrue(routingContext.Message.Headers.ContainsKey(Headers.ProcessingEndpoint), "Header was not added");
-            Assert.AreEqual(endpointName, routingContext.Message.Headers[Headers.ProcessingEndpoint], "Header value is incorrect");
             Assert.AreEqual(outGoingMessage.MessageId, routingContext.Message.MessageId, "Message Id are incorrect");
             Assert.IsNotEmpty(routingContext.RoutingStrategies, "No routing strategies found");
             Assert.AreEqual(1, routingContext.RoutingStrategies.Count, "Incorrect number of routing strategies found");
