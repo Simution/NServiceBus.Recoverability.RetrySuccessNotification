@@ -45,7 +45,6 @@
         /// <inheritdoc />
         protected override void Setup(FeatureConfigurationContext context)
         {
-            var endpointName = context.Settings.EndpointName();
             var notificationAddress = context.Settings.Get<string>(AddressKey);
             var triggerHeaders = context.Settings.Get<string[]>(TriggerHeadersKey);
             var copyBody = context.Settings.Get<bool>(CopyBody);
@@ -54,7 +53,7 @@
 
             if (!context.Settings.IsFeatureActive(typeof(Audit)))
             {
-                context.Pipeline.Register(new RetrySuccessNotificationDispatchConnector(endpointName), "Dispatches recovery success notifications to the transport");
+                context.Pipeline.Register(new RetrySuccessNotificationDispatchConnector(), "Dispatches recovery success notifications to the transport");
                 context.Pipeline.Register(new InvokeRetrySuccessNotificationPipelineBehavior(notificationAddress, triggerHeaders, copyBody), "Execute the retry success notification pipeline.");
                 return;
             }
