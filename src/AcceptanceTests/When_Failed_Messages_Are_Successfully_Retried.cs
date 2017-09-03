@@ -58,7 +58,7 @@ public class When_Failed_Messages_Are_Successfully_Retried : NServiceBusAcceptan
             }))
             .WithEndpoint<FakeServiceControl>()
             .Done(c => c.MessageHandlerInvoked && c.AuditHandlerInvoked && c.NotificationHandlerInvoked)
-            .Run(TimeSpan.FromMinutes(3));
+            .Run();
 
         Assert.IsFalse(context.HasMessageBody, "Message body is not empty");
     }
