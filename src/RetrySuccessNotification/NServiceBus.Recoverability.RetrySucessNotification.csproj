@@ -24,9 +24,6 @@
       <None Include="..\Directory.Build.targets" Link="Directory.Build.targets" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="NServiceBus" Version="[6.0.0,7.0.0)" />
-  </ItemGroup>
-  <ItemGroup>
-    <Reference Include="System.Configuration" />
+    <PackageReference Include="NServiceBus" Version="[7.0.0-*,8.0.0)" />
   </ItemGroup>
 </Project>
