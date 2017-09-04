@@ -1,7 +1,7 @@
 ﻿namespace NServiceBus
 {
-    using Configuration.AdvanceExtensibility;
-
+    using Configuration.AdvancedExtensibility;
+    
     /// <summary>
     /// Configuration options for Retry Success Notifications
     /// </summary>
