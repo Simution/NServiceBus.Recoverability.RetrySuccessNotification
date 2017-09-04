@@ -21,7 +21,7 @@ NServiceBus.Recoverability.RetrySuccessNotification is installable via [NuGet](h
 
 To enable retry success notifications access the configuration from `EndpointConfiguration` and configure the queue to send notifications to:
 
-```
+```Csharp
 var notificationConfig = endpointConfiguration.RetrySuccessNotifications();
 notificationConfig.SendRetrySuccessNotificationsTo("AddressToSendNotification");
 ```
@@ -30,14 +30,14 @@ If [auditing](https://docs.particular.net/nservicebus/operations/auditing) is tu
 
 To configure additional headers that will trigger success notifications use this configuration option:
 
-```
+```Csharp
 var notificationConfig = endpointConfiguration.RetrySuccessNotifications();
 notificationConfig.AddRetrySuccessNotificationTriggerHeaders("MyCustomHeader");
 ```
 
 To include the message body of the incoming message in the notification use this configuration option:
 
-```
+```Csharp
 var notificationConfig = endpointConfiguration.RetrySuccessNotifications();
 notificationConfig.CopyMessageBodyInNotification = true;
 ```
