@@ -22,8 +22,7 @@ NServiceBus.Recoverability.RetrySuccessNotification is installable via [NuGet](h
 To enable retry success notifications access the configuration from `EndpointConfiguration` and configure the queue to send notifications to:
 
 ```Csharp
-var notificationConfig = endpointConfiguration.RetrySuccessNotifications();
-notificationConfig.SendRetrySuccessNotificationsTo("AddressToSendNotification");
+endpointConfiguration.RetrySuccessNotifications().SendRetrySuccessNotificationsTo("AddressToSendNotification");
 ```
 
 If [auditing](https://docs.particular.net/nservicebus/operations/auditing) is turned on, the notification address and the audit address must be different.
@@ -46,13 +45,7 @@ notificationConfig.CopyMessageBodyInNotification = true;
 
 Normally one instance of ServiceControl is used to handle all audit and error messages. In systems with a high enough message volume a single instance ServiceControl can become overwhelmed. Since audit messages in a relatively healthy system represent the vast majority of the messages processed by ServiceControl it can be advantageous to split audit processing and error processing into seperate ServiceControl instances in this scenario.
 
-NServiceBus.Recoverability.RetrySuccessNotification is designed to work side-by-side with the Auditing feature built into NServiceBus. Configure audit messages to be sent to the auditing instance of ServiceControl, and successful retry notifications to the error processing instance of ServiceControl. 
-
-Install ServicePulse to work with the error processing instance of ServiceControl, since it does not provide functionality that uses audit messages.
-
-By configuring [error message forwarding](https://docs.particular.net/servicecontrol/creating-config-file#transport-servicecontrolforwarderrormessages) in the error processing instance of ServiceControl to forward to the error queue of the auditing instance of ServiceControl, both audit and error messages can be viewed together in ServiceInsight by connecting ServiceInsight to the auditing instance of ServiceControl. This is done through the Tools menu and the `Connect to ServiceControl` menu option.
-
-When using this configuration, it is also recommended to turn the [audit retention period](https://docs.particular.net/servicecontrol/creating-config-file#data-retention-servicecontrolauditretentionperiod) of the error processing instance of ServiceControl to 1 hour.
+A full explaination [is provided in the docs folder](docs/).
 
 --- 
 
