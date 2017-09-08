@@ -33,10 +33,7 @@
                 {
                     return true;
                 }
-                if (!config.Settings.TryGetAuditQueueAddress(out var auditAddress))
-                {
-                    return true;
-                }
+                config.Settings.TryGetAuditQueueAddress(out var auditAddress);
                 return auditAddress != config.Settings.GetOrDefault<string>(AddressKey);
             }, "Retry Success Notifications cannot be sent to the same queue as Audits");
             Prerequisite(config => !string.IsNullOrWhiteSpace(config.Settings.GetOrDefault<string>(AddressKey)), "No configured retry success notification address was configured");
@@ -45,21 +42,14 @@
         /// <inheritdoc />
         protected override void Setup(FeatureConfigurationContext context)
         {
+            var endpointName = context.Settings.EndpointName();
             var notificationAddress = context.Settings.Get<string>(AddressKey);
             var triggerHeaders = context.Settings.Get<string[]>(TriggerHeadersKey);
             var copyBody = context.Settings.Get<bool>(CopyBody);
 
             context.Settings.Get<QueueBindings>().BindSending(notificationAddress);
 
-            if (!context.Settings.IsFeatureActive(typeof(Audit)))
-            {
-                context.Pipeline.Register(new RetrySuccessNotificationDispatchConnector(), "Dispatches recovery success notifications to the transport");
-                context.Pipeline.Register(new InvokeRetrySuccessNotificationPipelineBehavior(notificationAddress, triggerHeaders, copyBody), "Execute the retry success notification pipeline.");
-                return;
-            }
-
-            context.Settings.TryGetAuditQueueAddress(out var auditAddress);
-            context.Pipeline.Replace("AuditProcessedMessage", new InvokeAuditAndRetrySucessNotificationPipelineBehavior(notificationAddress, triggerHeaders, copyBody, auditAddress), "Execute the audit and retry success notification pipelines.");            
+            context.Pipeline.Register(new RetrySuccessNotificationBehavior(endpointName, notificationAddress, triggerHeaders, copyBody), "Adds a retry success notification to the pending transport operations.");
         }
     }
 }
