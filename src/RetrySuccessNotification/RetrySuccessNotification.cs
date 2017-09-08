@@ -5,7 +5,7 @@
 
     /// <inheritdoc />
     /// <summary>
-    /// Provides the retry success notification feature    
+    /// Provides the retry success notification feature
     /// </summary>
     public class RetrySuccessNotification : Feature
     {
