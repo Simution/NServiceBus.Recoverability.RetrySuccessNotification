@@ -21,7 +21,7 @@ public class When_Failed_Messages_Are_Successfully_Retried : NServiceBusAcceptan
             .WithEndpoint<FakeServiceControl>()
             .WithEndpoint<TestEndpoint>(b => b.CustomConfig(config =>
                 {
-                    config.RetrySuccessNotifications().SendRetrySuccessNotificationsTo(FakeServiceControl.NotificationsSatellite.NotificationAddress);
+                    config.RetrySuccessNotification().SendRetrySuccessNotificationsTo(FakeServiceControl.NotificationsSatellite.NotificationAddress);
                 })
             .When(s =>
             {
@@ -44,7 +44,7 @@ public class When_Failed_Messages_Are_Successfully_Retried : NServiceBusAcceptan
             .WithEndpoint<FakeServiceControl>()
             .WithEndpoint<TestEndpoint>(b => b.CustomConfig(config =>
                 {
-                    config.RetrySuccessNotifications().SendRetrySuccessNotificationsTo(FakeServiceControl.NotificationsSatellite.NotificationAddress);
+                    config.RetrySuccessNotification().SendRetrySuccessNotificationsTo(FakeServiceControl.NotificationsSatellite.NotificationAddress);
                 })
                 .When(s =>
                 {
@@ -64,7 +64,7 @@ public class When_Failed_Messages_Are_Successfully_Retried : NServiceBusAcceptan
             .WithEndpoint<FakeServiceControl>()
             .WithEndpoint<TestEndpoint>(b => b.CustomConfig(config =>
                 {
-                    config.RetrySuccessNotifications().SendRetrySuccessNotificationsTo(FakeServiceControl.NotificationsSatellite.NotificationAddress);
+                    config.RetrySuccessNotification().SendRetrySuccessNotificationsTo(FakeServiceControl.NotificationsSatellite.NotificationAddress);
                 })
                 .When(s => s.SendLocal(new MessageToBeRetried())))
             .Done(c =>

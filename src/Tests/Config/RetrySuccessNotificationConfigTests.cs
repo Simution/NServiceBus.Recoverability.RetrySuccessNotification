@@ -12,7 +12,7 @@ public class RetrySuccessNotificationConfigTests
     {
         var endpointConfiguration = new EndpointConfiguration("test");
 
-        var config = endpointConfiguration.RetrySuccessNotifications();
+        var config = endpointConfiguration.RetrySuccessNotification();
 
         const string testAddress = "Test";
 
@@ -31,7 +31,7 @@ public class RetrySuccessNotificationConfigTests
     {
         var endpointConfiguration = new EndpointConfiguration("test");
 
-        var config = endpointConfiguration.RetrySuccessNotifications();
+        var config = endpointConfiguration.RetrySuccessNotification();
 
         const string testHeader = "Test";
 
@@ -55,7 +55,7 @@ public class RetrySuccessNotificationConfigTests
     {
         var endpointConfiguration = new EndpointConfiguration("test");
 
-        var config = endpointConfiguration.RetrySuccessNotifications();
+        var config = endpointConfiguration.RetrySuccessNotification();
 
         config.CopyMessageBodyInNotification = true;
 
