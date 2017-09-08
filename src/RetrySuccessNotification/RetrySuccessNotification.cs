@@ -45,12 +45,14 @@
         /// <inheritdoc />
         protected override void Setup(FeatureConfigurationContext context)
         {
+            var endpointName = context.Settings.EndpointName();
             var notificationAddress = context.Settings.Get<string>(AddressKey);
             var triggerHeaders = context.Settings.Get<string[]>(TriggerHeadersKey);
             var copyBody = context.Settings.Get<bool>(CopyBody);
 
             context.Settings.Get<QueueBindings>().BindSending(notificationAddress);
 
+            context.Pipeline.Register(new RetrySuccessNotificationBehavior(endpointName, notificationAddress, triggerHeaders, copyBody), "Adds a retry success notification to the pending transport operations.");
         }
     }
 }
