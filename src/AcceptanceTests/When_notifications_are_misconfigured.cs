@@ -16,7 +16,7 @@ class When_notifications_are_misconfigured
             .WithEndpoint<TestEndpoint>(b => b.CustomConfig(config =>
             {
                 config.AuditProcessedMessagesTo("audit");
-                config.RetrySuccessNotifications().SendRetrySuccessNotificationsTo("audit");
+                config.RetrySuccessNotification().SendRetrySuccessNotificationsTo("audit");
             }))
             .Done(c => c.EndpointsStarted)
             .Run();
@@ -31,7 +31,7 @@ class When_notifications_are_misconfigured
         var context = await Scenario.Define<Context>()
             .WithEndpoint<TestEndpoint>(b => b.CustomConfig(config =>
             {
-                config.RetrySuccessNotifications().SendRetrySuccessNotificationsTo(" ");
+                config.RetrySuccessNotification().SendRetrySuccessNotificationsTo(" ");
             }))
             .Done(c => c.EndpointsStarted)
             .Run();
@@ -46,7 +46,7 @@ class When_notifications_are_misconfigured
         var context = await Scenario.Define<Context>()
             .WithEndpoint<TestEndpoint>(b => b.CustomConfig(config =>
             {
-                config.RetrySuccessNotifications().SendRetrySuccessNotificationsTo(null);
+                config.RetrySuccessNotification().SendRetrySuccessNotificationsTo(null);
             }))
             .Done(c => c.EndpointsStarted)
             .Run();

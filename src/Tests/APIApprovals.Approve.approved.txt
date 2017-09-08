@@ -5,7 +5,7 @@ namespace NServiceBus
 {
     public class static ConfigureRetrySuccessNotification
     {
-        public static NServiceBus.RetrySuccessNotificationConfig RetrySuccessNotifications(this NServiceBus.EndpointConfiguration config) { }
+        public static NServiceBus.RetrySuccessNotificationConfig RetrySuccessNotification(this NServiceBus.EndpointConfiguration config) { }
     }
     public class RetrySuccessNotificationConfig
     {

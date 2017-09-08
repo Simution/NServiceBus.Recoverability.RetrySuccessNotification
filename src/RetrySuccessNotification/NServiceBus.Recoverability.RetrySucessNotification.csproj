@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net452</TargetFramework>
+    <TargetFrameworks>net452;netstandard2.0</TargetFrameworks>
     <AssemblyName>NServiceBus.Recoverability.RetrySuccessNotification</AssemblyName>
     <PackageId>NServiceBus.Recoverability.RetrySuccessNotification</PackageId>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
@@ -24,9 +24,6 @@
       <None Include="..\Directory.Build.targets" Link="Directory.Build.targets" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="NServiceBus" Version="[6.0.0,7.0.0)" />
-  </ItemGroup>
-  <ItemGroup>
-    <Reference Include="System.Configuration" />
+    <PackageReference Include="NServiceBus" Version="[7.0.0-*,8.0.0)" />
   </ItemGroup>
 </Project>

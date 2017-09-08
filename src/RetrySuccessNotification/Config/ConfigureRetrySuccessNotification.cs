@@ -1,7 +1,7 @@
 ﻿namespace NServiceBus
 {
-    using Configuration.AdvanceExtensibility;
-
+    using Configuration.AdvancedExtensibility;
+    
     /// <summary>
     /// Configuration options for Retry Success Notifications
     /// </summary>
@@ -10,7 +10,7 @@
         /// <summary>
         /// Access settings to configure Retry Success Notifications
         /// </summary>
-        public static RetrySuccessNotificationConfig RetrySuccessNotifications(this EndpointConfiguration config)
+        public static RetrySuccessNotificationConfig RetrySuccessNotification(this EndpointConfiguration config)
         {
             return new RetrySuccessNotificationConfig(config.GetSettings());
         }
