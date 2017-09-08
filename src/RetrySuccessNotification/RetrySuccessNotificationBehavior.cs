@@ -29,7 +29,10 @@ namespace NServiceBus
 
             var processedMessage = new OutgoingMessage(context.MessageId, new Dictionary<string, string>(context.Message.Headers), copyBody ? context.Message.Body : new byte[0]);
 
-            processedMessage.Headers.Add(Headers.ProcessingEndpoint, endpointName);
+            if (!processedMessage.Headers.ContainsKey(Headers.ProcessingEndpoint))
+            {
+                processedMessage.Headers.Add(Headers.ProcessingEndpoint, endpointName);
+            }
 
             var operations = context.Extensions.Get<PendingTransportOperations>();
 
