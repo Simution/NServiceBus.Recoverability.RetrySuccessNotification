@@ -33,10 +33,7 @@
                 {
                     return true;
                 }
-                if (!config.Settings.TryGetAuditQueueAddress(out var auditAddress))
-                {
-                    return true;
-                }
+                config.Settings.TryGetAuditQueueAddress(out var auditAddress);
                 return auditAddress != config.Settings.GetOrDefault<string>(AddressKey);
             }, "Retry Success Notifications cannot be sent to the same queue as Audits");
             Prerequisite(config => !string.IsNullOrWhiteSpace(config.Settings.GetOrDefault<string>(AddressKey)), "No configured retry success notification address was configured");
