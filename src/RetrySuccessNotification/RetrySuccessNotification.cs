@@ -51,15 +51,6 @@
 
             context.Settings.Get<QueueBindings>().BindSending(notificationAddress);
 
-            if (!context.Settings.IsFeatureActive(typeof(Audit)))
-            {
-                context.Pipeline.Register(new RetrySuccessNotificationDispatchConnector(), "Dispatches recovery success notifications to the transport");
-                context.Pipeline.Register(new InvokeRetrySuccessNotificationPipelineBehavior(notificationAddress, triggerHeaders, copyBody), "Execute the retry success notification pipeline.");
-                return;
-            }
-
-            context.Settings.TryGetAuditQueueAddress(out var auditAddress);
-            context.Pipeline.Replace("AuditProcessedMessage", new InvokeAuditAndRetrySucessNotificationPipelineBehavior(notificationAddress, triggerHeaders, copyBody, auditAddress), "Execute the audit and retry success notification pipelines.");            
         }
     }
 }
